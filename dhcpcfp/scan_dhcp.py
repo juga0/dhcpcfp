@@ -65,16 +65,6 @@ def process_request(r):
     return data
 
 
-def write_md_report(data, content, outfpath):
-    from string import Template
-    logger.debug('data %s', data)
-    template = Template(content)
-    logger.debug('template %s', template)
-    report = template.substitute(**data)
-    with io.open(outfpath, 'wb') as fd:
-        fd.write(report)
-
-
 def check_iface(iface):
     if iface not in get_if_list():
         logger.error('The interface could not be found.')
