@@ -1,0 +1,24 @@
+language: python
+sudo: required
+dist: trusty
+python:
+    - '2.7'
+    - '3.5'
+
+install:
+    - pip install -r requirements_dev.txt
+    - pip install -U tox coveralls codecov
+# && pip install -r dev-requirements.txt"
+env:
+    - TOX_ENV=lint
+    - TOX_ENV=py27,stats
+    - TOX_ENV=py35,stats
+    - TOX_ENV=doc
+
+script:
+  - tox -c tox.ini -e $TOX_ENV
+  - coverage run --source=dhcpcfp setup.py test
+
+after_success:
+  - coveralls
+  - codecov
