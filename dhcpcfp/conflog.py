@@ -8,7 +8,19 @@ import sys
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
+    'ColoredFormatter': {},
     'formatters': {
+        'verbose_color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '%(log_color)s%(asctime)s %(levelname)s'
+                      ' %(filename)s:%(lineno)s -'
+                      ' %(funcName)s - %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple_color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '%(log_color)s%(message)s'
+        },
         'verbose': {
             'format': '%(asctime)s %(levelname)s'
                       ' %(filename)s:%(lineno)s -'
@@ -25,16 +37,16 @@ LOGGING = {
     },
     'handlers': {
         'stdout': {
-            'class': 'logging.StreamHandler',
+            'class': 'colorlog.StreamHandler',
             'stream': sys.stdout,
-            'formatter': 'verbose',
+            'formatter': 'simple_color',
             'level': 'DEBUG',
         },
         'stdoutscapy': {
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
             'formatter': 'simple',
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'syslog': {
             'class': 'logging.handlers.SysLogHandler',
@@ -51,12 +63,12 @@ LOGGING = {
         },
         "scapy": {
             'handlers': ['stdoutscapy'],
-            'level': logging.DEBUG,
+            'level': logging.INFO,
             'propagate': False
         },
         "scapy.interactive": {
             'handlers': ['stdoutscapy'],
-            'level': logging.DEBUG,
+            'level': logging.INFO,
             'propagate': False
         }
     }
