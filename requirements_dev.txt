@@ -2,3 +2,7 @@
 --index-url https://pypi.python.org/simple/
 
 -e .
+# from setup.py extras_require
+dhcpcfp[test]
+dhcpcfp[dev]
+dhcpcfp[doc]

@@ -31,21 +31,22 @@ setup(
     license='GPLv3+',
     url=dhcpcfp.__website__,
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    dependency_links=[
-        "https://pypi.python.org/simple/scapy==2.2.0-dev",
-        "https://pypi.python.org/simple/pip==8.1.2",
-        # "https://pypi.python.org/simple/Jinja2==2.9.6"
+    install_requires=[
+        'scapy>=2.2";python_version<="2.7"',
+        'scapy-python3>=0.21;python_version>="3.4"',
+        "pip>=8.1"
     ],
     extras_require={
         'dev': ['ipython', 'pyflakes', 'pep8'],
         'test': ['coverage', 'coveralls', 'codecov', 'tox', 'pytest'],
+        'doc': ['sphinx', 'pylint']
     },
-    # scripts=['scripts/dhcpcfp'],
     entry_points={
         'console_scripts': [
-            'dhcpcfp = dhcpcfp.dhcpcfp:main',
+            'dhcpcanon = dhcpcanon.dhcpcanon:main',
         ]
     },
+    include_package_data=True,
     keywords='python scapy dhcp RFC7844 RFC2131 anonymity fingerprint',
     classifiers=[
         'Development Status :: 3 - Alpha',
