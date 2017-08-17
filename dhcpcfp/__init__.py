@@ -25,16 +25,17 @@ except ImportError:
         from setuptools_scm import get_version
         version = get_version()
     except (ImportError, LookupError):
-        version = '0.2.0'
+        version = '0.3.0'
 
 __version__ = version
 __author__ = "juga"
 __author_mail__ = "juga@riseup.net"
-__description__ = "DHCP client disclosing less identifying information"
-__long_description__ = "Python implmentation of the DHCP Anonymity Profile \
-                        (RFC7844) designed for users that \
-                        wish to remain anonymous to the visited network \
-                        minimizing disclosure of identifying information."
+__description__ = "Detect your own DHCP fingerprint"
+__long_description__ = "dhcpcfp scans the DHCP client REQUEST packets,  \
+                        creates a report with the fingerprinting data found  \
+                        and the differences with the Anonymity Profiles  \
+                        (RFC7844) to \
+                        minimize disclosure of identifying information."
 __website__ = 'https://github.com/juga0/dhcpcfp'
 __documentation__ = 'http://dhcpcfp.readthedocs.io/en/' + __version__
 __authors__ = []
