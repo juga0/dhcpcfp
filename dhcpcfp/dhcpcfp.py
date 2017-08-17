@@ -90,7 +90,7 @@ def main():
     # write_html_report(data, TEMPLATE_PATH, reportpath)
     devices = device_from_fp(args.db, args.fingerprint, args.vendor)
     data['devices'] = devices
-    write_md_report(data, content, report_md_path)
+    write_md_report(data, content, args.output)
 
 
 if __name__ == '__main__':
