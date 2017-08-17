@@ -8,26 +8,21 @@ import argparse
 import logging
 import logging.config
 import os.path
-import sys
 
 from scapy.config import conf
 
+import colorlog
+
 from . import __version__
 from .conflog import LOGGING
-from .obtain_device import device_from_fp
-from .report import write_md_report
-from .report_template import content
-from .scan_dhcp import (check_iface, check_is_my_mac, process_request,
-                               sniff_request)
+from .scan_dhcp import check_iface, check_is_my_mac, sniff_dhcp, sniff_pcap
 
 logging.config.dictConfig(LOGGING)
-logger = logging.getLogger('dhcpcfp')
-logger_scapy_interactive = logging.getLogger('scapy.interactive')
+logger = colorlog.getLogger('dhcpcfp')
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 OUTPUT_MD_PATH = os.path.join(path, 'output.md')
 DB = os.path.join(path, 'data', 'dhcpfp.db')
-print DB
 
 
 def main():
@@ -42,12 +37,8 @@ def main():
                         help='DHCP fingerprint.')
     parser.add_argument('-e', '--vendor',
                         help='DHCP vendor.')
-    # parser.add_argument('interface', nargs='?',
-    #                     help='Interface where to listen for DHCP.')
     parser.add_argument('-i', '--interface',
                         help='Interface where to listen for DHCP.')
-    # parser.add_argument('mac', nargs='?',
-    #                     help='MAC address to listen for DHCP traffic.')
     parser.add_argument('-m', '--mac',
                         help='MAC address to listen for DHCP traffic.')
     parser.add_argument('-a', '--all',
@@ -59,6 +50,12 @@ def main():
     parser.add_argument('-d', '--db',
                         help='DB path with DHCP fingerprints.',
                         default=DB)
+    parser.add_argument('-p', '--pcapfile',
+                        help='Obtain devices from pcap dump instead of '
+                             'scanning.')
+    parser.add_argument('-c', '--continuous',
+                        help='Scan until user cancel.',
+                        action='store_true')
     args = parser.parse_args()
 
     conf.sniff_promisc = conf.promisc = 0
@@ -66,15 +63,20 @@ def main():
 
     if args.verbose:
         logger.setLevel(logging.DEBUG)
-        logger_scapy_interactive.setLevel(logging.DEBUG)
+        # logger_scapy_interactive.setLevel(logging.DEBUG)
 
     if args.fingerprint or args.vendor:
         devices = device_from_fp(args.db, args.fingerprint, args.vendor)
         print(devices)
         exit()
+    if args.pcapfile:
+        logger.debug('Processing pcap file.')
+        data = sniff_pcap(args.pcapfile, args.db, args.output)
+        exit()
     if args.interface:
+        check_iface(args.interface)
         conf.iface = args.interface
-    logger.debug('interface %s' % conf.iface)
+    logger.debug('Interface: %s' % conf.iface)
     mac, ismymac = check_is_my_mac(args.mac)
     if args.all:
         conf.checkIPaddr = 0
@@ -82,15 +84,8 @@ def main():
         logger.warning('Listening for all traffic'
                        ', use at your own risk.')
     # TODO: listen only in interface or only on mac or all
-    p = sniff_request(mac, ismymac, args.all)
-    data = process_request(p)
-    args.fingerprint = data['dhcp_fp']
-    args.vendor = data['dhcp_vendor']
-    conf.logLevel = 20
-    # write_html_report(data, TEMPLATE_PATH, reportpath)
-    devices = device_from_fp(args.db, args.fingerprint, args.vendor)
-    data['devices'] = devices
-    write_md_report(data, content, args.output)
+    p = sniff_dhcp(args.db, args.output, mac, ismymac, args.all,
+                   args.continuous)
 
 
 if __name__ == '__main__':
