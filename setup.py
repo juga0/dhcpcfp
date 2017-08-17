@@ -40,8 +40,13 @@ setup(
         'dev': ['ipython', 'pyflakes', 'pep8'],
         'test': ['coverage', 'coveralls', 'codecov', 'tox', 'pytest'],
     },
-    scripts=['scripts/dhcpcfp'],
-    keywords='python scapy dhcp RFC7844 RFC2131 anonymity',
+    # scripts=['scripts/dhcpcfp'],
+    entry_points={
+        'console_scripts': [
+            'dhcpcfp = dhcpcfp.dhcpcfp:main',
+        ]
+    },
+    keywords='python scapy dhcp RFC7844 RFC2131 anonymity fingerprint',
     classifiers=[
         'Development Status :: 3 - Alpha',
         "Environment :: Console",

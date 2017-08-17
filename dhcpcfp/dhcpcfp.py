@@ -12,25 +12,21 @@ import sys
 
 from scapy.config import conf
 
-from dhcpcfp import __version__
-from dhcpcfp.conflog import LOGGING
-from dhcpcfp.obtain_device import device_from_fp
-from dhcpcfp.report import write_md_report
-from dhcpcfp.report_template import content
-from dhcpcfp.scan_dhcp import (check_iface, check_is_my_mac, process_request,
+from . import __version__
+from .conflog import LOGGING
+from .obtain_device import device_from_fp
+from .report import write_md_report
+from .report_template import content
+from .scan_dhcp import (check_iface, check_is_my_mac, process_request,
                                sniff_request)
 
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('dhcpcfp')
 logger_scapy_interactive = logging.getLogger('scapy.interactive')
 
-TEMPLATE_PATH = os.path.join(module_path, 'templates', 'report.html')
-# TEMPLATE_MD_PATH = os.path.join(module_path, 'report_template.py')
-OUTPUT_PATH = os.path.join(path, 'output.html')
+path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 OUTPUT_MD_PATH = os.path.join(path, 'output.md')
-
-directory, basename = os.path.split(sys.argv[0])
-DB = os.path.join(os.path.dirname(__file__), '..', data, 'dhcpfp.db')
+DB = os.path.join(path, 'data', 'dhcpfp.db')
 print DB
 
 
@@ -42,26 +38,26 @@ def main():
     parser.add_argument('--version', action='version',
                         help='version',
                         version='%(prog)s ' + __version__)
-    parser.add_argument('-f', 'fingerprint',
+    parser.add_argument('-f', '--fingerprint',
                         help='DHCP fingerprint.')
-    parser.add_argument('-e', 'vendor',
+    parser.add_argument('-e', '--vendor',
                         help='DHCP vendor.')
     # parser.add_argument('interface', nargs='?',
     #                     help='Interface where to listen for DHCP.')
-    parser.add_argument('-i', 'interface',
+    parser.add_argument('-i', '--interface',
                         help='Interface where to listen for DHCP.')
     # parser.add_argument('mac', nargs='?',
     #                     help='MAC address to listen for DHCP traffic.')
-    parser.add_argument('-m', 'mac',
+    parser.add_argument('-m', '--mac',
                         help='MAC address to listen for DHCP traffic.')
     parser.add_argument('-a', '--all',
                         help='Not recommended, use at your own risk.',
                         action='store_true')
     parser.add_argument('-o', '--output',
-                        help='Report path.'
+                        help='Report path.',
                         default=OUTPUT_MD_PATH)
     parser.add_argument('-d', '--db',
-                        help='DB path with DHCP fingerprints.'
+                        help='DB path with DHCP fingerprints.',
                         default=DB)
     args = parser.parse_args()
 
