@@ -3,15 +3,15 @@
 # Copyright 2016 juga <juga@riseup.net>
 # This file is part of dhcpcfp.
 """."""
+import io
 import logging
-import sqlite3
+from string import Template
 
 from .conflog import LOGGING
 
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('dhcpcfp')
 
-from string import Template
 
 def write_md_report(data, content, outfpath):
     logger.debug('data %s', data)

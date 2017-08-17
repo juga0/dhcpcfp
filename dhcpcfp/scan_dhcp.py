@@ -4,7 +4,6 @@
 # This file is part of dhcpcfp.
 """."""
 import argparse
-import io
 import logging
 import logging.config
 import sys
