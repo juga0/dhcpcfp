@@ -6,21 +6,29 @@
 import logging
 import sqlite3
 
-from .conflog import LOGGING
-
-logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('dhcpcfp')
 
 QUERY_BASE = """select distinct
-device.mobile, device.tablet, device.name,
-comb_dhcp_distinct.version
-from comb_dhcp_distinct, dhcp_fingerprint, dhcp_vendor, device
-where comb_dhcp_distinct.dhcp_fingerprint_id=dhcp_fingerprint.id and
-comb_dhcp_distinct.dhcp_vendor_id=dhcp_vendor.id and
-comb_dhcp_distinct.device_id=device.id"""
-QUERY_END = " order by comb_dhcp_distinct.score desc;"
+device.name,
+comb_dhcp_mac.version
+from comb_dhcp_mac, dhcp_fingerprint, dhcp_vendor, device
+where comb_dhcp_mac.dhcp_fingerprint_id=dhcp_fingerprint.id and
+comb_dhcp_mac.dhcp_vendor_id=dhcp_vendor.id and
+comb_dhcp_mac.device_id=device.id"""
+QUERY_END = " order by comb_dhcp_mac.score desc;"
 QUERY_FP = """ and dhcp_fingerprint.value=?"""
 QUERY_VENDOR = """ and dhcp_vendor.value=?"""
+
+QUERY_BASE_MAC = """select distinct
+device.name,
+comb_dhcp_mac.version, mac_vendor.name
+from comb_dhcp_mac, dhcp_fingerprint, dhcp_vendor, device, mac_vendor
+where comb_dhcp_mac.dhcp_fingerprint_id=dhcp_fingerprint.id and
+comb_dhcp_mac.dhcp_vendor_id=dhcp_vendor.id and
+comb_dhcp_mac.device_id=device.id and
+comb_dhcp_mac.mac_vendor_id=mac_vendor.id and
+(dhcp_fingerprint_id!=0 or dhcp_vendor_id!=0)"""
+QUERY_MAC = """ and mac_vendor.mac=?"""
 
 
 def create_query(dhcp_fingerprint=None, dhcp_vendor=None):
@@ -33,7 +41,23 @@ def create_query(dhcp_fingerprint=None, dhcp_vendor=None):
         params = (dhcp_fingerprint,)
     elif dhcp_vendor is not None:
         query += QUERY_VENDOR + QUERY_END
-        params = (dhcp_vendor)
+        params = (dhcp_vendor,)
+    logger.debug(query)
+    logger.debug(params)
+    return (query, params)
+
+
+def create_query_mac(mac_vendor, dhcp_fingerprint=None, dhcp_vendor=None):
+    query = QUERY_BASE_MAC
+    if dhcp_fingerprint is not None and dhcp_vendor is not None:
+        query += QUERY_FP + QUERY_VENDOR + QUERY_MAC + QUERY_END
+        params = (dhcp_fingerprint, dhcp_vendor, mac_vendor)
+    elif dhcp_fingerprint is not None:
+        query += QUERY_FP + QUERY_MAC + QUERY_END
+        params = (dhcp_fingerprint, mac_vendor)
+    elif dhcp_vendor is not None:
+        query += QUERY_VENDOR + QUERY_MAC + QUERY_END
+        params = (dhcp_vendor, mac_vendor)
     logger.debug(query)
     logger.debug(params)
     return (query, params)
@@ -47,27 +71,19 @@ def query_db(db, query, params):
 
 
 def gen_device_text(rows):
-    lines = []
-    for row in rows:
-        row = list(row)
-        if row[2] is None:
-            row[2] = u''
-        if row[3] is None:
-            row[3] = u''
-        if row[0] is 1:
-            row[0] = 'mobile'
-        elif row[1] is 1:
-            row[0] = 'tablet'
-        else:
-            row[0] = 'computer'
-        row.pop(1)
-        lines.append(', '.join(row))
-    text = '\n'.join(lines)
+    text = '. '.join([', '.join([i or u'' for i in row]) for row in rows])
     return text
 
 
 def device_from_fp(db, dhcp_fingerprint=None, dhcp_vendor=None):
     query, params = create_query(dhcp_fingerprint, dhcp_vendor)
+    rows = query_db(db, query, params)
+    text = gen_device_text(rows)
+    return text
+
+
+def device_from_fp_mac(db, mac_vendor, dhcp_fingerprint=None, dhcp_vendor=None):
+    query, params = create_query_mac(mac_vendor, dhcp_fingerprint, dhcp_vendor)
     rows = query_db(db, query, params)
     text = gen_device_text(rows)
     return text
