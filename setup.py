@@ -43,7 +43,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'dhcpcanon = dhcpcanon.dhcpcanon:main',
+            'dhcpcfp = dhcpcfp.dhcpcfp:main',
         ]
     },
     include_package_data=True,
