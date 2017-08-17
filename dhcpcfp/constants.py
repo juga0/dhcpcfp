@@ -4,14 +4,15 @@
 # This file is part of dhcpcfp.
 
 
-# not including xid
-BOOTPAP_OPTS = set(['hlen', 'sname',
+BOOTPAP_OPTS = set(['hlen', 'sname', 'xid',
                     'ciaddr', 'hops', 'giaddr',
                     'chaddr', 'yiaddr', 'secs', 'flags', 'htype', 'file',
                     'siaddr', 'options', 'op'])
 
-# not including param_req_list
-DHCPAP_OPTS = set(['requested_addr', 'server_id', 'message-type'])
+DHCPAP_OPTS = set(['message-type', 'client_id', 'param_req_list',
+                   'requested_addr', 'server_id'])
+
+DHCPAP_PRL_OPTS = [1, 3, 5, 15, 31, 33, 43, 44, 46, 47, 121, 249, 252]
 
 PRL_OPTS = {
  0: 'Pad',
@@ -257,9 +258,9 @@ PRL_OPTS = {
  246: 'Reserved (Private Use)',
  247: 'Reserved (Private Use)',
  248: 'Reserved (Private Use)',
- 249: 'Reserved (Private Use)',
+ 249: 'Private/Classless Static Route (Microsoft)',
  250: 'Reserved (Private Use)',
  251: 'Reserved (Private Use)',
- 252: 'Reserved (Private Use)',
+ 252: 'Private/Proxy autodiscovery',
  253: 'Reserved (Private Use)',
  255: 'End'}
