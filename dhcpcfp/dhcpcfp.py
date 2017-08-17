@@ -15,6 +15,7 @@ import colorlog
 
 from . import __version__
 from .conflog import LOGGING
+from .obtain_device import device_from_fp
 from .scan_dhcp import check_iface, check_is_my_mac, sniff_dhcp, sniff_pcap
 
 logging.config.dictConfig(LOGGING)
@@ -71,7 +72,7 @@ def main():
         exit()
     if args.pcapfile:
         logger.debug('Processing pcap file.')
-        data = sniff_pcap(args.pcapfile, args.db, args.output)
+        sniff_pcap(args.pcapfile, args.db, args.output)
         exit()
     if args.interface:
         check_iface(args.interface)
@@ -84,8 +85,8 @@ def main():
         logger.warning('Listening for all traffic'
                        ', use at your own risk.')
     # TODO: listen only in interface or only on mac or all
-    p = sniff_dhcp(args.db, args.output, mac, ismymac, args.all,
-                   args.continuous)
+    sniff_dhcp(args.db, args.output, mac, ismymac, args.all,
+               args.continuous)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ import logging
 import sys
 
 from scapy.arch import get_if_hwaddr
+from scapy.arch.linux import get_if_list
 from scapy.config import conf
 from scapy.layers.dhcp import BOOTP, DHCP
 from scapy.layers.l2 import Ether
@@ -41,17 +42,17 @@ def sniff_dhcp(db, outpath, mac, ismymac=False, allpkts=False,
         logger.debug('Got a DHCP request packet.')
         show_info_detailed(ans[0], db, outpath)
     sniff(iface=conf.iface,
-         filter=sniff_filter,
-         lfilter=lambda p: is_request(p),
-         prn=lambda x: show_info(x, db, outpath))
+          filter=sniff_filter,
+          lfilter=lambda p: is_request(p),
+          prn=lambda x: show_info(x, db, outpath))
 
 
 def sniff_pcap(pcapfile, db, outpath):
     # pkts = rdpcap(pcapfile)
-    ans = sniff(sniff_filter=FILTER_DHCP,
-                lfilter=lambda p: is_request(p),
-                prn=lambda x: show_info(x, db, outpath),
-                offline=pcapfile)
+    sniff(sniff_filter=FILTER_DHCP,
+          lfilter=lambda p: is_request(p),
+          prn=lambda x: show_info(x, db, outpath),
+          offline=pcapfile)
 
 
 def show_info_detailed(r, db, outpath):

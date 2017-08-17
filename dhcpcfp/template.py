@@ -1,7 +1,8 @@
 content = """DHCP Client Fingerprint report
 =========================================
 
-Data that would not be send with a DHCP client that implements the Anonymity Profiles:
+Data that would not be send with a DHCP client that implements the Anonymity
+Profiles:
 
 - BOOTP layer: $bootp_diff
 
@@ -9,12 +10,13 @@ Data that would not be send with a DHCP client that implements the Anonymity Pro
 
 - DHCP layer: Parameter Request List: $dhcp_prl_names
 
-Options used to guess device and operating system (do not show this to the user)""
+Options used to guess device and operating system :
 
 - dhcp_fingerprint: $dhcp_fp
 - vendor_id: $dhcp_vendor
 
-Possible devices and operating systems guessed from the data sent in the DHCP requests:
+Possible devices and operating systems guessed from the data sent in the DHCP
+requests:
 
 $devices
 

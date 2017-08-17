@@ -176,7 +176,8 @@ PRL_OPTS = {
  158: 'OPTION_V4_PCP_SERVER',
  159: 'OPTION_V4_PORTPARAMS',
  160: 'DHCP Captive-Portal',
- 161: 'OPTION_MUD_URL_V4 (TEMPORARY - registered 2016-11-17, expires 2017-11-17)',
+ 161: 'OPTION_MUD_URL_V4 (TEMPORARY - '
+      'registered 2016-11-17, expires 2017-11-17)',
  162: 'Unassigned',
  163: 'Unassigned',
  164: 'Unassigned',

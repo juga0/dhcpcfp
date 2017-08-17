@@ -82,7 +82,8 @@ def device_from_fp(db, dhcp_fingerprint=None, dhcp_vendor=None):
     return text
 
 
-def device_from_fp_mac(db, mac_vendor, dhcp_fingerprint=None, dhcp_vendor=None):
+def device_from_fp_mac(db, mac_vendor, dhcp_fingerprint=None,
+                       dhcp_vendor=None):
     query, params = create_query_mac(mac_vendor, dhcp_fingerprint, dhcp_vendor)
     rows = query_db(db, query, params)
     text = gen_device_text(rows)
