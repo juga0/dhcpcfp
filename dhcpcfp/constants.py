@@ -3,7 +3,9 @@
 # Copyright 2016 juga <juga@riseup.net>
 # This file is part of dhcpcfp.
 
-
+FILTER_DHCP = "udp and src port 68 and dst port 67"
+FILTER_DHCP_MAC = "udp and src port 68 and dst port 67" \
+                  " and ether src {}"
 BOOTPAP_OPTS = set(['hlen', 'sname', 'xid',
                     'ciaddr', 'hops', 'giaddr',
                     'chaddr', 'yiaddr', 'secs', 'flags', 'htype', 'file',
