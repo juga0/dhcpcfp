@@ -13,7 +13,7 @@ Documentation
 -------------
 
 A more extensive online documentation is available in `Read the
-docs <https://dhcpcanon.readthedocs.io/>`__. The documentation source is
+docs <https://dhcpcfp.readthedocs.io/>`__. The documentation source is
 in `this repository <docs/source/>`__.
 
 Visit `DHCPAP <https://github.com/dhcpap>`__ for an overview of all the
@@ -60,9 +60,9 @@ To the persons that have given suggestions and comments about this
 implementation.
 
 .. |GPLv3| image:: https://www.gnu.org/graphics/gplv3-127x51.png
-.. |PyPI| image:: https://img.shields.io/pypi/v/dhcpcanon.svg
-   :target: https://pypi.python.org/pypi/dhcpcanon
-.. |Build Status| image:: https://www.travis-ci.org/juga0/dhcpcanon.svg?branch=master
-   :target: https://www.travis-ci.org/juga0/dhcpcanon
-.. |Coverage Status| image:: https://coveralls.io/repos/github/juga0/dhcpcanon/badge.svg?branch=master
-   :target: https://coveralls.io/github/juga0/dhcpcanon?branch=master
+.. |PyPI| image:: https://img.shields.io/pypi/v/dhcpcfp.svg
+   :target: https://pypi.python.org/pypi/dhcpcfp
+.. |Build Status| image:: https://www.travis-ci.org/juga0/dhcpcfp.svg?branch=master
+   :target: https://www.travis-ci.org/juga0/dhcpcfp
+.. |Coverage Status| image:: https://coveralls.io/repos/github/juga0/dhcpcfp/badge.svg?branch=master
+   :target: https://coveralls.io/github/juga0/dhcpcfp?branch=master
