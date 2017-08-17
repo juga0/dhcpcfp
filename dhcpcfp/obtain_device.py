@@ -43,7 +43,6 @@ def query_db(db, query, params):
     conn = sqlite3.connect(db)
     c = conn.cursor()
     rows = c.execute(query, params)
-    conn.close()
     return rows
 
 
